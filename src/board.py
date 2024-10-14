@@ -97,217 +97,27 @@ class Board:
 
         def king_moves():
             # # for eating
-            #     # left up
-            tempr, tempc = row, col
-            cnt = 0
-            can_eat = False
-            dir_r = -1
-            dir_c = -1
-            while True:
-                if Square.in_range(tempr, tempc):
-                    if(cnt == 2): break
-                    tempr += dir_r               
-                    tempc += dir_c
-                    if can_eat and cnt != 2:
-                        if Square.in_range(tempr, tempc):
-                            if self.squares[tempr][tempc].isempty():
-                                initial = Square(row, col)
-                                final = Square(tempr, tempc)
-                                # creating new move
-                                move = Move(initial, final)
-                                piece.add_move(move)
+            dirs = [
+                [-1, -1],
+                [-1, 1],
+                [1, -1],
+                [1, 1]
+            ]
 
-                    if Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_rival_piece(piece.color):
-                        if Square.in_range(tempr + dir_r, tempc + dir_c) and self.squares[tempr + dir_r][tempc + dir_c].isempty():
-                            can_eat = True
-                            cnt += 1
-                        else:
-                            break
-                    elif Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_team_piece(piece.color):
-                        break
-                else:
-                    break
-
-                # Right up
-            tempr, tempc = row, col
-            cnt = 0
-            can_eat = False
-            dir_r = -1
-            dir_c = 1
-            while True:
-                if Square.in_range(tempr, tempc):
-                    if(cnt == 2): break
-                    tempr += dir_r                
-                    tempc += dir_c
-                    if can_eat and cnt != 2:
-                        if Square.in_range(tempr, tempc):
-                            if self.squares[tempr][tempc].isempty():
-                                initial = Square(row, col)
-                                final = Square(tempr, tempc)
-                                # creating new move
-                                move = Move(initial, final)
-                                piece.add_move(move)
-
-                    if Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_rival_piece(piece.color):
-                        if Square.in_range(tempr + dir_r, tempc + dir_c) and self.squares[tempr + dir_r][tempc + dir_c].isempty():
-                            can_eat = True
-                            cnt += 1                        
-                        else:
-                            break 
-                    elif Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_team_piece(piece.color):
-                        break
-                else:
-                    break
-            
-                # Left down
-            tempr, tempc = row, col
-            cnt = 0
-            can_eat = False
-            dir_r = 1
-            dir_c = -1
-            while True:
-                if Square.in_range(tempr, tempc):
-                    if(cnt == 2): break
-                    tempr += dir_r                
-                    tempc += dir_c
-                    if can_eat and cnt != 2:
-                        if Square.in_range(tempr, tempc):
-                            if self.squares[tempr][tempc].isempty():
-                                initial = Square(row, col)
-                                final = Square(tempr, tempc)
-                                # creating new move
-                                move = Move(initial, final)
-                                piece.add_move(move)
-
-                    if Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_rival_piece(piece.color):
-                        if Square.in_range(tempr + dir_r, tempc + dir_c) and self.squares[tempr + dir_r][tempc + dir_c].isempty():
-                            can_eat = True
-                            cnt += 1                        
-                        else:
-                            break
-                    elif Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_team_piece(piece.color):
-                        break
-                else:
-                    break
-
-                # Right down
-            tempr, tempc = row, col
-            cnt = 0
-            can_eat = False
-            dir_r = 1
-            dir_c = 1
-            while True:
-                if Square.in_range(tempr, tempc):
-                    if(cnt == 2): break
-                    tempr += dir_r                
-                    tempc += dir_c
-                    if can_eat and cnt != 2:
-                        if Square.in_range(tempr, tempc):
-                            if self.squares[tempr][tempc].isempty():
-                                initial = Square(row, col)
-                                final = Square(tempr, tempc)
-                                # creating new move
-                                move = Move(initial, final)
-                                piece.add_move(move)
-
-                    if Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_rival_piece(piece.color):
-                        if Square.in_range(tempr + dir_r, tempc + dir_c) and self.squares[tempr + dir_r][tempc + dir_c].isempty():
-                            can_eat = True
-                            cnt += 1                        
-                        else:
-                            break 
-                    elif Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_team_piece(piece.color):
-                        break
-                else:
-                    break
-            
-            # dirs = [
-            #     [-1, -1],
-            #     [-1, 1],
-            #     [1, -1],
-            #     [1, 1]
-            # ]
-
-            # for dir in dirs:
-            #     self.kings_eating_moves(piece, row, col, dir)
+            for dir in dirs:
+                self.kings_eating_moves(piece, row, col, dir)
 
             # for moving
             if len(piece.moves) == 0:
-                # Left up
-                tempr, tempc = row, col
-                dir_r = -1
-                dir_c = -1
-                while True:
-                    if Square.in_range(tempr, tempc):
-                        tempr += dir_r               
-                        tempc += dir_c
-                        if Square.in_range(tempr, tempc) and self.squares[tempr][tempc].has_piece():
-                            break
-                        else:
-                            initial = Square(row, col)
-                            final = Square(tempr, tempc)
-                            # creating new move
-                            move = Move(initial, final)
-                            piece.add_move(move)
-                    else:
-                        break
-                
-                # Right up
-                tempr, tempc = row, col
-                dir_r = -1
-                dir_c = 1
-                while True:
-                    if Square.in_range(tempr, tempc):
-                        tempr += dir_r               
-                        tempc += dir_c
-                        if Square.in_range(tempr, tempc) and not self.squares[tempr][tempc].isempty():
-                            break
-                        else:
-                            initial = Square(row, col)
-                            final = Square(tempr, tempc)
-                            # creating new move
-                            move = Move(initial, final)
-                            piece.add_move(move)
-                    else:
-                        break
+                dirs = [
+                    [-1, -1],
+                    [-1, 1],
+                    [1, -1],
+                    [1, 1]
+                ]
 
-                # Left down
-                tempr, tempc = row, col
-                dir_r = 1
-                dir_c = -1
-                while True:
-                    if Square.in_range(tempr, tempc):
-                        tempr += dir_r               
-                        tempc += dir_c
-                        if Square.in_range(tempr, tempc) and not self.squares[tempr][tempc].isempty():
-                            break
-                        else:
-                            initial = Square(row, col)
-                            final = Square(tempr, tempc)
-                            # creating new move
-                            move = Move(initial, final)
-                            piece.add_move(move)
-                    else:
-                        break
-                
-                # Right down
-                tempr, tempc = row, col
-                dir_r = 1
-                dir_c = 1
-                while True:
-                    if Square.in_range(tempr, tempc):
-                        tempr += dir_r               
-                        tempc += dir_c
-                        if Square.in_range(tempr, tempc) and not self.squares[tempr][tempc].isempty():
-                            break
-                        else:
-                            initial = Square(row, col)
-                            final = Square(tempr, tempc)
-                            # creating new move
-                            move = Move(initial, final)
-                            piece.add_move(move)
-                    else:
-                        break
+                for dir in dirs:
+                    self.kings_moves(piece, row, col, dir)
 
 
         if piece.name == 'pawn':
@@ -341,44 +151,58 @@ class Board:
             # self.squares[4][3] = Square(4, 3, King("black"))
 
 
-    # def kings_eating_moves(self, piece, row, col, dir):
-    #     possible_eating_moves = []
+    def kings_eating_moves(self, piece, row, col, dir):
+        dir_r = dir[0]
+        dir_c = dir[1]
+        init_r = row
+        init_c = col
+        has_empty_square = False
 
+        while True:
+            row += dir_r
+            col += dir_c
+            if Square.in_range(row, col):
+                if self.squares[row][col].has_team_piece(piece.color):
+                    break
+                elif self.squares[row][col].has_rival_piece(piece.color):
+                    while True:
+                        row += dir_r
+                        col += dir_c
+                        if Square.in_range(row, col) and self.squares[row][col].isempty():
+                            has_empty_square = True
+                        else: 
+                            break
 
-    #     dir_r = dir[0]
-    #     dir_c = dir[1]
-    #     init_r = row
-    #     init_c = col
-    #     has_empty_square = False
+                        if has_empty_square:
+                            initial = Square(init_r, init_c)
+                            final = Square(row, col)
+                            # creating new move
+                            move = Move(initial, final)
+                            piece.add_move(move)
+                else: # if square is empty
+                    continue
+            else:
+                break
 
-    #     while True:
-    #         row += dir_r
-    #         col += dir_c
-    #         if Square.in_range(row, col):
-    #             if self.squares[row][col].has_team_piece(piece.color):
-    #                 break
-    #             elif self.squares[row][col].has_rival_piece(piece.color):
-    #                 while True:
-    #                     row += dir_r
-    #                     col += dir_c
-    #                     if Square.in_range(row, col) and self.squares[row][col].isempty():
-    #                         has_empty_square = True
-    #                     else: 
-    #                         break
+    def kings_moves(self, piece, row, col, dir):
+        init_r = row
+        init_c = col
+        dir_r = dir[0]
+        dir_c = dir[1]
 
-    #                     if has_empty_square:
-    #                         initial = Square(init_r, init_c)
-    #                         final = Square(row, col)
-    #                         # creating new move
-    #                         move = Move(initial, final)
-    #                         piece.add_move(move)
-    #             else: # if square is empty
-    #                 continue
-    #         else:
-    #             break
+        while True:
+            row += dir_r
+            col += dir_c
+            if Square.in_range(row, col):
+                if self.squares[row][col].isempty():
+                    initial = Square(init_r, init_c)
+                    final = Square(row, col)
+                    # creating new move
+                    move = Move(initial, final)
+                    piece.add_move(move)
+                else: break
+            else: break
 
-    # def kings_moves(self, piece, row, col, dir):
-    #     pass
 
 
 
