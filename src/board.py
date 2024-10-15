@@ -7,7 +7,7 @@ from move import Move
 
 class Board:
     def __init__(self):
-        self.squares = [] #######
+        self.squares = []
         self.last_move = None
         self._create_board()
         self._add_pieces("white")
@@ -29,6 +29,18 @@ class Board:
                 eaten_piece_row = initial.row + difference_row
                 eaten_piece_col = initial.col + difference_col
                 self.squares[eaten_piece_row][eaten_piece_col].piece = None
+            else: # for kings
+                dir_r = (final.row - initial.row) // abs(final.row - initial.row)
+                dir_c = (final.col - initial.col) // abs(final.col - initial.col)
+                temp_r, temp_c = initial.row, initial.col 
+                while True:
+                    temp_r += dir_r
+                    temp_c += dir_c
+                    if Square.in_range(temp_r, temp_c):
+                        if self.squares[temp_r][temp_c].has_rival_piece(piece.color):
+                            self.squares[temp_r][temp_c].piece = None
+                            break
+
 
 
         piece.moved = True
@@ -202,8 +214,3 @@ class Board:
                     piece.add_move(move)
                 else: break
             else: break
-
-
-
-
-        

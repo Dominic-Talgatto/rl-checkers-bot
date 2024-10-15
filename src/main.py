@@ -23,7 +23,7 @@ class Main:
             for event in pygame.event.get():
                 self.game.show_bg(screen)
                 self.game.show_piece(screen)
-                # self.game.show_moves(screen)
+                self.game.show_moves(screen)
                 self.game.show_hover(screen)
                 
                 #click
@@ -49,8 +49,6 @@ class Main:
                 
                 #release
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    self.game.show_bg(screen)
-                    self.game.show_piece(screen)
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
 
@@ -63,11 +61,10 @@ class Main:
 
                         if board.valid_move(dragger.piece, move):
                             board.move(dragger.piece, move)
-                            self.game.show_bg(screen)
-                            self.game.show_piece(screen)
                             self.game.next_turn()
                     self.game.show_bg(screen)
                     self.game.show_piece(screen)
+                    self.game.show_hover(screen)
 
                             
                     dragger.undrag_piece()
@@ -90,9 +87,8 @@ class Main:
                         self.game.show_moves(screen)
                         self.game.show_hover(screen)
                         dragger.update_blit(screen)
-                    
-
             pygame.display.update()
+
 
 main = Main()
 main.mainloop()
