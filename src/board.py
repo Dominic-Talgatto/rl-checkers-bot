@@ -36,11 +36,25 @@ class Board:
                 while True:
                     temp_r += dir_r
                     temp_c += dir_c
+                    if abs(temp_r) == abs(final.row) and abs(temp_c) == abs(final.col):
+                        break
                     if Square.in_range(temp_r, temp_c):
                         if self.squares[temp_r][temp_c].has_rival_piece(piece.color):
                             self.squares[temp_r][temp_c].piece = None
                             break
+                    else: 
+                        break
 
+
+        # Check if pawn can be turn into kings 
+
+        if piece.name == "pawn":
+            r = 0 if piece.color == "white" else 7
+            if final.row == r:
+                # piece.name = "king"
+                color = piece.color
+                self.squares[final.row][final.col] = None
+                self.squares[final.row][final.col] = Square(final.row, final.col, King(color))
 
 
         piece.moved = True
@@ -158,7 +172,7 @@ class Board:
         for row in row_checkers:
             for col in range(COLUMNS):
                 if (row + col) % 2 == 1:
-                    self.squares[row][col] = Square(row, col, King(color))
+                    self.squares[row][col] = Square(row, col, Checker(color))
             # self.squares[3][2] = Square(3, 2, Checker("white"))
             # self.squares[4][3] = Square(4, 3, King("black"))
 
