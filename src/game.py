@@ -3,6 +3,7 @@ import pygame
 from const import *
 from board import Board
 from dragger import Dragger
+from square import Square
 
 class Game:
     def __init__(self):
@@ -54,4 +55,5 @@ class Game:
         self.next_player = "white" if self.next_player == "black" else "black"
 
     def set_hover(self, row, col):
-        self.hovered_square = self.board.squares[row][col] 
+        if Square.in_range(row, col):
+            self.hovered_square = self.board.squares[row][col] 

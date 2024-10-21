@@ -11,6 +11,7 @@ class Board:
         self._create_board()
         self._add_pieces("white")
         self._add_pieces("black")
+        self.pieces_that_can_eat = []
 
     def move(self, piece, move):
         initial = move.initial
@@ -146,11 +147,9 @@ class Board:
         elif piece.name == 'king':
             king_moves()
 
-
-
     # returns if it has eating move
     def pawns_eating_moves(self, piece, row, col, dir):
-        cnt = 0
+        has_eating_move = False
 
         for possible_move in dir:
             possible_rival_piece_row, possible_rival_piece_col = possible_move
@@ -166,9 +165,10 @@ class Board:
                     # creating new move
                     move = Move(initial, final)
                     piece.add_move(move)
-                    cnt += 1
+                    has_eating_move = True
+
         
-        return cnt != 0
+        return has_eating_move
 
     # returns if it has eating move
     def kings_eating_moves(self, piece, row, col, dir):
@@ -197,7 +197,7 @@ class Board:
                                 [1, 1]
                             ]
                             dirs.remove([-1 * dir_r, -1 * dir_c])
-                            print(dirs)
+                            # print(dirs)
                             if not bool_:
                                 initial = Square(init_r, init_c)
                                 final = Square(row, col)
@@ -281,6 +281,38 @@ class Board:
                     break
             return has_second_eating_move
    
+    def has_eating_pieces(self, color):
+        for i in range(8):
+            for j in range(8):
+                piece = self.squares[i][j].piece
+                can_eat = False
+                row = i
+                col = j
+                if piece and piece.color == color:
+                    if piece.name == "pawn":
+                        possible_moves = [
+                            (row + 1, col - 1),
+                            (row + 1, col + 1),
+                            (row - 1, col - 1),
+                            (row - 1, col + 1)
+                        ]
+                        can_eat = self.pawns_eating_moves(piece, row, col, possible_moves)
+                    else:
+                        dirs = [
+                            [-1, -1],
+                            [-1, 1],
+                            [1, -1],
+                            [1, 1]
+                        ]
+                        for dir in dirs:
+                            can_eat = self.king_has_second_eating_move(piece, row, col, dir)
+                    
+                    if can_eat:
+                        self.pieces_that_can_eat.append(piece)
+
+
+
+
     def _create_board(self):
         self.squares = [[0, 0, 0, 0, 0, 0, 0, 0] for col in range(COLUMNS)]
 
@@ -298,6 +330,6 @@ class Board:
         for row in row_checkers:
             for col in range(COLUMNS):
                 if (row + col) % 2 == 1:
-                    self.squares[row][col] = Square(row, col, Checker(color))
+                    self.squares[row][col] = Square(row, col, King(color))
             # self.squares[3][2] = Square(3, 2, Checker("white"))
             # self.squares[4][3] = Square(4, 3, King("black"))

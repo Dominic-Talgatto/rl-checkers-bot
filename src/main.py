@@ -20,12 +20,17 @@ class Main:
         # game = self.game
 
         while True:
+
+            # show methods
+            self.game.show_bg(screen)
+            self.game.show_moves(screen)
+            self.game.show_piece(screen)
+            self.game.show_hover(screen)
+
+            if dragger.dragging:
+                dragger.update_blit(screen)
+
             for event in pygame.event.get():
-                self.game.show_bg(screen)
-                self.game.show_piece(screen)
-                self.game.show_moves(screen)
-                self.game.show_hover(screen)
-                
                 #click
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     dragger.update_mouse(event.pos)
@@ -36,15 +41,19 @@ class Main:
                     if self.game.board.squares[clicked_row][clicked_col].has_piece():
                         piece = self.game.board.squares[clicked_row][clicked_col].piece
                         if piece.color == self.game.next_player:
-                            piece.clear_moves()
-                            self.game.board.calc_moves(piece, clicked_row, clicked_col)
-                            dragger.save_initial(event.pos)
+                            # Check if piece is in board.pieces_that_can_eat or board.pieces_that_can_eat is empty
+                            board.has_eating_pieces(piece.color)
+                            print(board.pieces_that_can_eat)
+                            if piece in board.pieces_that_can_eat or len(board.pieces_that_can_eat) == 0:
+                                piece.clear_moves()
+                                board.calc_moves(piece, clicked_row, clicked_col)
+                                dragger.save_initial(event.pos)
 
-                            # show methods
-                            self.game.show_bg(screen)
-                            self.game.show_piece(screen)
-                            self.game.show_moves(screen)
-                            dragger.drag_piece(piece)
+                                # show methods
+                                self.game.show_bg(screen)
+                                self.game.show_moves(screen)
+                                self.game.show_piece(screen)
+                                dragger.drag_piece(piece)
                 
                 
                 #release
@@ -59,15 +68,20 @@ class Main:
                         final = Square(released_row, released_col)
                         move = Move(initial, final)
 
+                        # check for valid move
                         if board.valid_move(dragger.piece, move):
                             board.move(piece, move)
+                            # check for second move
                             if dragger.piece.has_second_eating_move:
                                 self.game.next_turn()
                                 dragger.piece.has_second_eating_move = False
                             self.game.next_turn()
-                    self.game.show_bg(screen)
-                    self.game.show_piece(screen)
-                    self.game.show_hover(screen)
+                        
+                        # show methods
+                        self.game.show_bg(screen)
+                        self.game.show_piece(screen)
+                        
+                        board.pieces_that_can_eat = []
 
                             
                     dragger.undrag_piece()
@@ -86,12 +100,14 @@ class Main:
                         dragger.update_mouse(event.pos)
                         # show methods
                         self.game.show_bg(screen)
-                        self.game.show_piece(screen)
                         self.game.show_moves(screen)
+                        self.game.show_piece(screen)
                         self.game.show_hover(screen)
                         dragger.update_blit(screen)
-            pygame.display.update()
 
+
+            
+            pygame.display.update()
 
 main = Main()
 main.mainloop()
