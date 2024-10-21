@@ -60,11 +60,10 @@ class Main:
                         move = Move(initial, final)
 
                         if board.valid_move(dragger.piece, move):
-                            board.has_second_move = False
                             board.move(piece, move)
-                            if board.has_second_move:
+                            if dragger.piece.has_second_eating_move:
                                 self.game.next_turn()
-                                board.has_second_move = False
+                                dragger.piece.has_second_eating_move = False
                             self.game.next_turn()
                     self.game.show_bg(screen)
                     self.game.show_piece(screen)

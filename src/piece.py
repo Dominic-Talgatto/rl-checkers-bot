@@ -8,6 +8,7 @@ class Piece:
         self.value = value * value_sign
         self.moves = []
         self.moved = False
+        self.has_second_eating_move = False
         self.texture = texture
         self.set_texture()
         self.texture_rect = texture_rect
