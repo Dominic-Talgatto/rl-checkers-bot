@@ -65,7 +65,7 @@ class Board:
                 # piece.name = "king"
                 color = piece.color
                 self.squares[final.row][final.col] = None
-                self.squares[final.row][final.col] = Square(final.row, final.col, King(color))
+                self.squares[final.row][final.col] = Square(final.row, final.col, Checker(color))
 
 
         piece.moved = True

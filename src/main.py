@@ -1,7 +1,6 @@
 import pygame
 import sys
 
-from board import Board
 from const import *
 from game import Game
 from move import Move
@@ -53,11 +52,17 @@ class Main:
                                 self.game.show_moves(screen)
                                 self.game.show_piece(screen)
                                 dragger.drag_piece(piece)
-                
+                            else:
+                                print("you have eating piece")
+                        else:
+                            print("choose another color")
                 
                 #release
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if dragger.dragging:
+
+                        board.pieces_that_can_eat = []
+
                         dragger.update_mouse(event.pos)
 
                         released_row = dragger.mouseY // SQ_SIZE
@@ -74,13 +79,13 @@ class Main:
                             if dragger.piece.has_second_eating_move:
                                 self.game.next_turn()
                                 dragger.piece.has_second_eating_move = False
+                                board.pieces_that_can_eat.append(dragger.piece)
                             self.game.next_turn()
                         
                         # show methods
                         self.game.show_bg(screen)
                         self.game.show_piece(screen)
                         
-                        board.pieces_that_can_eat = []
 
 
                             
