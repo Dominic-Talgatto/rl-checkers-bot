@@ -43,7 +43,6 @@ class Main:
                         if piece.color == self.game.next_player:
                             # Check if piece is in board.pieces_that_can_eat or board.pieces_that_can_eat is empty
                             board.has_eating_pieces(piece.color)
-                            print(board.pieces_that_can_eat)
                             if piece in board.pieces_that_can_eat or len(board.pieces_that_can_eat) == 0:
                                 piece.clear_moves()
                                 board.calc_moves(piece, clicked_row, clicked_col)
@@ -82,6 +81,7 @@ class Main:
                         self.game.show_piece(screen)
                         
                         board.pieces_that_can_eat = []
+
 
                             
                     dragger.undrag_piece()

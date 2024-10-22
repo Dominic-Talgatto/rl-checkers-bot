@@ -73,7 +73,6 @@ class Board:
         # clear valid moves
         piece.clear_moves()
 
-
     def valid_move(self, piece, move):
         return move in piece.moves
 
@@ -197,7 +196,6 @@ class Board:
                                 [1, 1]
                             ]
                             dirs.remove([-1 * dir_r, -1 * dir_c])
-                            # print(dirs)
                             if not bool_:
                                 initial = Square(init_r, init_c)
                                 final = Square(row, col)
@@ -208,7 +206,6 @@ class Board:
 
                                 for d in dirs:
                                     if self.king_has_second_eating_move(piece, row, col, d):
-                                        print(1)
                                         piece.clear_moves()
                                         bool_ = True
                                         initial = Square(init_r, init_c)
@@ -234,7 +231,6 @@ class Board:
             if init_r <= abs(row) and init_c <= abs(col):
                 break
         return has_eating_move
-
 
     def kings_moves(self, piece, row, col, dir):
         init_r = row
@@ -271,7 +267,6 @@ class Board:
                             row += dir_r
                             col += dir_c
                             if Square.in_range(row, col) and self.squares[row][col].isempty():
-
                                 has_second_eating_move = True
                             else: 
                                 break
@@ -304,14 +299,12 @@ class Board:
                             [1, -1],
                             [1, 1]
                         ]
-                        for dir in dirs:
-                            can_eat = self.king_has_second_eating_move(piece, row, col, dir)
+                        for d in dirs:
+                            if not can_eat:
+                                can_eat = self.king_has_second_eating_move(piece, row, col, d)
                     
                     if can_eat:
                         self.pieces_that_can_eat.append(piece)
-
-
-
 
     def _create_board(self):
         self.squares = [[0, 0, 0, 0, 0, 0, 0, 0] for col in range(COLUMNS)]
