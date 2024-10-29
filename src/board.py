@@ -16,9 +16,10 @@ class Board:
     def move(self, piece, move):
         initial = move.initial
         final = move.final
+
         
-        self.squares[initial.row][initial.col].piece = None
-        self.squares[final.row][final.col].piece = piece
+
+        piece.has_second_eating_move = False
 
         # for pawns
         if piece.name == "pawn":
@@ -45,17 +46,38 @@ class Board:
             temp_r, temp_c = initial.row, initial.col 
             while True:
                 temp_r += dir_r
-                temp_c += dir_c
-
-                if abs(temp_r) == abs(final.row) and abs(temp_c) == abs(final.col):
-                    break
+                temp_c += dir_c  
 
                 if Square.in_range(temp_r, temp_c):
                     if self.squares[temp_r][temp_c].has_rival_piece(piece.color):
                         self.squares[temp_r][temp_c].piece = None
-                        break
-                else: 
+                        while True:
+                            temp_r += dir_r
+                            temp_c += dir_c
+                            
+                            if Square.in_range(temp_r, temp_c) and self.squares[temp_r][temp_c].isempty():
+                                dirs = [
+                                    [-1, -1],
+                                    [-1, 1],
+                                    [1, -1],
+                                    [1, 1]
+                                ]
+                                dirs.remove([-1 * dir_r, -1 * dir_c])
+                                for d in dirs:
+                                    if self.king_has_second_eating_move(piece, temp_r, temp_c, d):
+                                        piece.has_second_eating_move = True
+                            else:
+                                break
+                            if abs(temp_r) == abs(final.row) and abs(temp_c) == abs(final.col):
+                                break
+                else:       
+                  break
+
+                if abs(temp_r) == abs(final.row) and abs(temp_c) == abs(final.col):
                     break
+
+            self.squares[initial.row][initial.col].piece = None
+            self.squares[final.row][final.col].piece = piece
 
 
         # Check if pawn can be turn into kings 
@@ -213,7 +235,7 @@ class Board:
                                         # creating new move
                                         move = Move(initial, final)
                                         piece.add_move(move)
-                                        piece.has_second_eating_move = True
+                                        # piece.has_second_eating_move = True
                             else:
                                 for d in dirs:
                                     if self.king_has_second_eating_move(piece, row, col, d):
@@ -254,7 +276,7 @@ class Board:
     def king_has_second_eating_move(self, piece, row, col, dir):
             dir_r = dir[0]
             dir_c = dir[1]
-            has_second_eating_move = False
+            hsem = False # has_second_eating_move
 
             while True:
                 row += dir_r
@@ -267,14 +289,14 @@ class Board:
                             row += dir_r
                             col += dir_c
                             if Square.in_range(row, col) and self.squares[row][col].isempty():
-                                has_second_eating_move = True
+                                hsem = True
                             else: 
                                 break
                     else: # if square is empty
                         continue
                 else:
                     break
-            return has_second_eating_move
+            return hsem
    
     def has_eating_pieces(self, color):
         for i in range(8):

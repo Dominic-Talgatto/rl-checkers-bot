@@ -16,7 +16,6 @@ class Main:
         dragger = self.game.dragger
         screen = self.screen
         board = self.game.board
-        # game = self.game
 
         while True:
 
@@ -61,7 +60,6 @@ class Main:
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if dragger.dragging:
 
-                        board.pieces_that_can_eat = []
 
                         dragger.update_mouse(event.pos)
 
@@ -74,12 +72,13 @@ class Main:
 
                         # check for valid move
                         if board.valid_move(dragger.piece, move):
+                            board.pieces_that_can_eat = []
+                            # dragger.piece.has_second_eating_move = False
                             board.move(piece, move)
                             # check for second move
                             if dragger.piece.has_second_eating_move:
-                                self.game.next_turn()
-                                dragger.piece.has_second_eating_move = False
                                 board.pieces_that_can_eat.append(dragger.piece)
+                                self.game.next_turn()
                             self.game.next_turn()
                         
                         # show methods
