@@ -12,54 +12,6 @@ class Main:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.game = Game()
 
-    def show_game_over_window(self, result_text):
-        # Display semi-transparent overlay
-        overlay = pygame.Surface((WIDTH, HEIGHT))
-        overlay.set_alpha(180)  # transparency
-        overlay.fill((0, 0, 0))
-        self.screen.blit(overlay, (0, 0))
-        
-        # Draw "Game Over" box
-        font = pygame.font.Font(None, 50)
-        result_surface = font.render(result_text, True, (0, 0, 0))
-        result_rect = result_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
-
-        # Button parameters
-        button_font = pygame.font.Font(None, 36)
-        play_again_surface = button_font.render("Play Again", True, (0, 0, 0))
-        exit_surface = button_font.render("Exit", True, (0, 0, 0))
-
-        play_again_rect = play_again_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
-        exit_rect = exit_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 80))
-
-        # Draw elements
-        pygame.draw.rect(self.screen, (255, 255, 255), result_rect.inflate(20, 20))
-        pygame.draw.rect(self.screen, (255, 255, 255), play_again_rect.inflate(20, 10))
-        pygame.draw.rect(self.screen, (255, 255, 255), exit_rect.inflate(20, 10))
-        
-        self.screen.blit(result_surface, result_rect)
-        self.screen.blit(play_again_surface, play_again_rect)
-        self.screen.blit(exit_surface, exit_rect)
-
-        pygame.display.update()
-
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if play_again_rect.collidepoint(event.pos):
-                        # Reset the game
-                        self.game.reset()  # You may need to implement reset in your Game class
-                        # game = self.game
-                        # board = self.game.board
-                        # dragger = self.game.dragger
-                        return
-                    elif exit_rect.collidepoint(event.pos):
-                        pygame.quit()
-                        sys.exit()
-
     def mainloop(self):
         dragger = self.game.dragger
         screen = self.screen
