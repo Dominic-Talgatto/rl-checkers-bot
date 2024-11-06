@@ -16,10 +16,8 @@ class Board:
     def move(self, piece, move):
         initial = move.initial
         final = move.final
-
-        
-
         piece.has_second_eating_move = False
+        piece.did_eat = False
 
         # for pawns
         if piece.name == "pawn":
@@ -29,7 +27,9 @@ class Board:
                 difference_col = (final.col - initial.col) // 2
                 eaten_piece_row = initial.row + difference_row
                 eaten_piece_col = initial.col + difference_col
+
                 self.squares[eaten_piece_row][eaten_piece_col].piece = None
+                piece.did_eat = True
                 possible_moves = [
                     (final.row + 1, final.col - 1),
                     (final.row + 1, final.col + 1),
@@ -51,6 +51,8 @@ class Board:
                 if Square.in_range(temp_r, temp_c):
                     if self.squares[temp_r][temp_c].has_rival_piece(piece.color):
                         self.squares[temp_r][temp_c].piece = None
+                        piece.did_eat = True
+                        
                         while True:
                             temp_r += dir_r
                             temp_c += dir_c
@@ -345,6 +347,6 @@ class Board:
         for row in row_checkers:
             for col in range(COLUMNS):
                 if (row + col) % 2 == 1:
-                    self.squares[row][col] = Square(row, col, King(color))
+                    self.squares[row][col] = Square(row, col, Checker(color))
             # self.squares[3][2] = Square(3, 2, Checker("white"))
             # self.squares[4][3] = Square(4, 3, King("black"))
