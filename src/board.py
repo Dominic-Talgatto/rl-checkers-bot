@@ -40,6 +40,14 @@ class Board:
 
             self.squares[initial.row][initial.col].piece = None
             self.squares[final.row][final.col].piece = piece
+            
+            r = 0 if piece.color == "white" else 7
+            if final.row == r:
+                color = piece.color
+                self.squares[final.row][final.col] = None
+                self.squares[final.row][final.col] = Square(final.row, final.col, King(color))
+
+            
         else: # for kings
             dir_r = (final.row - initial.row) // abs(final.row - initial.row)
             dir_c = (final.col - initial.col) // abs(final.col - initial.col)
@@ -80,18 +88,6 @@ class Board:
 
             self.squares[initial.row][initial.col].piece = None
             self.squares[final.row][final.col].piece = piece
-
-
-        # Check if pawn can be turn into kings 
-        if piece.name == "pawn":
-            r = 0 if piece.color == "white" else 7
-            if final.row == r:
-                # piece.name = "king"
-                color = piece.color
-                self.squares[final.row][final.col] = None
-                self.squares[final.row][final.col] = Square(final.row, final.col, Checker(color))
-
-
         piece.moved = True
 
         # clear valid moves

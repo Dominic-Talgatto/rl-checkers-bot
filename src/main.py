@@ -18,8 +18,8 @@ class Main:
         board = self.game.board
 
         while True:
-            # show methods
             if not self.game.game_over:
+                # show methods
                 self.game.show_bg(screen)
                 self.game.show_moves(screen)
                 self.game.show_piece(screen)
@@ -88,17 +88,20 @@ class Main:
                                 board.pieces_that_can_eat = []
                                 board.move(dragger.piece, move)
                                 if dragger.piece.did_eat:
-                                    self.game.move_cnt = 0
+                                    self.game.reset_cnt()
                             
                                 # check for second move
                                 if dragger.piece.has_second_eating_move:
                                     board.pieces_that_can_eat.append(dragger.piece)
-                                    # set move cnt to 0 if piece has been eaten in game.py file
                                     self.game.next_turn()
                                 self.game.next_turn()
                             
                                 # Finish situations
                                 self.game.finish()
+                                
+                                # to check for draw
+                                if dragger.piece.name == "pawn":
+                                    self.game.reset_cnt()
                             
                             # show methods
                             self.game.show_bg(screen)

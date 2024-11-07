@@ -66,13 +66,11 @@ class Game:
         black_pawns = 0
         white_kings = 0
         black_kings = 0
-        remaining_pieces = [] ###
 
         for i in range(8):
             for j in range(8):
                 if self.board.squares[i][j].piece:
                     piece = self.board.squares[i][j].piece
-                    remaining_pieces.append(piece)
                     if piece.color == "white":
                         if piece.name == "pawn":
                             white_pawns += 1
@@ -94,15 +92,18 @@ class Game:
             result_text = "White Won!"
             self.game_over = True
 
-        elif white_pawns == 0 and black_pawns == 0:
+        else:
             self.move_cnt += 1
-            if self.move_cnt == 32:
+            if self.move_cnt >= 32:
                 # draw
-                self.game_over = True
                 result_text = "Draw!"
+                self.game_over = True
             
         return result_text
     
     def reset(self):
         self.__init__()
 
+    def reset_cnt(self):
+        self.move_cnt = 0
+        
