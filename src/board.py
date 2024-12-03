@@ -12,6 +12,7 @@ class Board:
         self._add_pieces("white")
         self._add_pieces("black")
         self.pieces_that_can_eat = []
+        self.squares_that_can_eat = []
 
     def move(self, piece, move):
         initial = move.initial
@@ -297,9 +298,11 @@ class Board:
             return hsem
    
     def has_eating_pieces(self, color):
+        self.squares_that_can_eat = []
         for i in range(8):
             for j in range(8):
                 piece = self.squares[i][j].piece
+                square = self.squares[i][j]
                 can_eat = False
                 row = i
                 col = j
@@ -325,6 +328,42 @@ class Board:
                     
                     if can_eat:
                         self.pieces_that_can_eat.append(piece)
+                        self.squares_that_can_eat.append(square)
+        return len(self.pieces_that_can_eat) != 0
+
+    def evaluate(self):
+        # white_pieces_left, black_pieces_left, white_kings_left, black_kings_left, = 0, 0, 0, 0
+        score = 0
+        for i in range(8):
+            for j in range(8):
+                piece = self.squares[i][j].piece
+                if piece:
+                    score += piece.value
+                # if piece.color == "white":
+                #     if piece.name == "pawn":
+                #         white_pieces_left += 1
+                #     else:
+                #         white_kings_left += 1
+                # else:
+                #     if piece.name == "pawn":
+                #         black_pieces_left += 1
+                #     else:
+                #         black_kings_left += 1
+        return score
+
+    def get_all_squares(self, color):
+        squares = []
+        for i in range(8):
+            for j in range(8):
+                if (i + j) % 2 == 1:
+                    square = self.squares[i][j]
+                    piece = self.squares[i][j].piece
+                    if piece and piece.color == color:
+                        squares.append(square)
+                        # print(piece.color)
+                        # print(square.row, square.col)
+                        # print(1)
+        return squares
 
     def _create_board(self):
         self.squares = [[0, 0, 0, 0, 0, 0, 0, 0] for col in range(COLUMNS)]
@@ -346,3 +385,13 @@ class Board:
                     self.squares[row][col] = Square(row, col, Checker(color))
             # self.squares[3][2] = Square(3, 2, Checker("white"))
             # self.squares[4][3] = Square(4, 3, King("black"))
+
+    def reset_board(self):
+        self.pieces_that_can_eat = []
+        self.squares_that_can_eat = []
+
+
+
+
+
+

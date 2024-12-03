@@ -40,4 +40,4 @@ class King(Piece):
             self.dir = -1
         else:
             self.dir = 1
-        super().__init__('king', color, 4.0)
+        super().__init__('king', color, 3.5)

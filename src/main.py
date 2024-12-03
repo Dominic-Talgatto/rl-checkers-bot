@@ -1,10 +1,14 @@
 import pygame
 import sys
+import os
+from copy import deepcopy
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from const import *
 from game import Game
 from move import Move
 from square import Square
+from algorithm import minimax
 
 class Main:
     def __init__(self):
@@ -16,10 +20,13 @@ class Main:
         dragger = self.game.dragger
         screen = self.screen
         board = self.game.board
+        clock = pygame.time.Clock()
 
         while True:
+            clock.tick(60)
             if not self.game.game_over:
                 # show methods
+                self.game.board = deepcopy(board)
                 self.game.show_bg(screen)
                 self.game.show_moves(screen)
                 self.game.show_piece(screen)
@@ -28,16 +35,27 @@ class Main:
                 if dragger.dragging:
                     dragger.update_blit(screen)
 
+
+                if self.game.next_player == "white":
+                    value, new_board = minimax(deepcopy(board), 3, True, self.game)
+                    if new_board:
+                        self.game.ai_move(new_board)
+                        board = deepcopy(new_board)
+                        self.game.board = deepcopy(board)
+                        self.game.next_player = "black"
+                    board.reset_board()
+                    self.game.board.reset_board()
+
                 for event in pygame.event.get():
                     # click
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         dragger.update_mouse(event.pos)
-
                         clicked_row = dragger.mouseY // SQ_SIZE
                         clicked_col = dragger.mouseX // SQ_SIZE
 
-                        if self.game.board.squares[clicked_row][clicked_col].has_piece():
-                            piece = self.game.board.squares[clicked_row][clicked_col].piece
+                        if board.squares[clicked_row][clicked_col].has_piece():
+                            piece = board.squares[clicked_row][clicked_col].piece
+
                             if piece.color == self.game.next_player:
                                 # Check if piece is in board.pieces_that_can_eat or board.pieces_that_can_eat is empty
                                 board.has_eating_pieces(piece.color)

@@ -106,4 +106,10 @@ class Game:
 
     def reset_cnt(self):
         self.move_cnt = 0
-        
+
+    def get_board(self):
+        return self.board
+    
+    def ai_move(self, board):
+        self.board = board
+        self.next_turn()
