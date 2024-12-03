@@ -42,7 +42,7 @@ class Main:
                         self.game.ai_move(new_board)
                         board = deepcopy(new_board)
                         self.game.board = deepcopy(board)
-                        self.game.next_player = "black"
+                        # self.game.next_player = "black"
                     board.reset_board()
                     self.game.board.reset_board()
 

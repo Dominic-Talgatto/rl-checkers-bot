@@ -332,23 +332,24 @@ class Board:
         return len(self.pieces_that_can_eat) != 0
 
     def evaluate(self):
-        # white_pieces_left, black_pieces_left, white_kings_left, black_kings_left, = 0, 0, 0, 0
+        white_pieces_left, black_pieces_left, white_kings_left, black_kings_left, = 0, 0, 0, 0
         score = 0
         for i in range(8):
             for j in range(8):
                 piece = self.squares[i][j].piece
                 if piece:
-                    score += piece.value
-                # if piece.color == "white":
-                #     if piece.name == "pawn":
-                #         white_pieces_left += 1
-                #     else:
-                #         white_kings_left += 1
-                # else:
-                #     if piece.name == "pawn":
-                #         black_pieces_left += 1
-                #     else:
-                #         black_kings_left += 1
+                    # score += piece.value
+                    if piece.color == "white":
+                        if piece.name == "pawn":
+                            white_pieces_left += 1
+                        else:
+                            white_kings_left += 3
+                    else:
+                        if piece.name == "pawn":
+                            black_pieces_left -= 1
+                        else:
+                            black_kings_left -= 3
+        score = white_pieces_left + black_pieces_left + white_kings_left + black_kings_left
         return score
 
     def get_all_squares(self, color):
