@@ -3,31 +3,36 @@ import pygame
 
 # import board
 
-def minimax(position, depth, max_player, game):
+def minimax(position, depth, max_player, game, alpha, beta):
     # if depth == 0 or position.winner() != None:
     #     return position.evaluate(), position
     if depth == 0:
         return position.evaluate(), position
     
-    if max_player:
+    if position.next_player_board == "white":
         maxEval = float('-inf')
         best_move = None
-        for move in get_all_moves(deepcopy(position), "white", game):
-            evaluation = minimax(deepcopy(move), depth-1, False, game)[0]
+        for move in get_all_moves(deepcopy(position), 'white', game):
+            evaluation = minimax(deepcopy(move), depth-1, False, game, alpha, beta)[0]
             maxEval = max(maxEval, evaluation)
             if maxEval == evaluation:
                 best_move = move
+            alpha = max(alpha, maxEval)
+            # if beta <= alpha:
+                # break
         
         return maxEval, best_move
     else:
         minEval = float('inf')
         best_move = None
-        for move in get_all_moves(deepcopy(position), "black", game):
-            evaluation = minimax(deepcopy(move), depth-1, True, game)[0]
+        for move in get_all_moves(deepcopy(position), 'black', game):
+            evaluation = minimax(deepcopy(move), depth-1, True, game, alpha, beta)[0]
             minEval = min(minEval, evaluation)
             if minEval == evaluation:
                 best_move = move
-        
+            beta = min(alpha, minEval)
+            # if beta <= alpha:
+            #     break
         return minEval, best_move
 
 
@@ -36,7 +41,7 @@ def get_all_moves(board, color, game):
     
     if board.has_eating_pieces(color):
         for square in board.squares_that_can_eat:
-            piece = square.piece
+            piece = deepcopy(square.piece)
             piece.clear_moves()
             board.calc_moves(piece, square.row, square.col)
             for move in piece.moves:
@@ -48,7 +53,7 @@ def get_all_moves(board, color, game):
             # piece.clear_moves()
     else:
         for square in board.get_all_squares(color):
-            piece = square.piece
+            piece = deepcopy(square.piece)
             piece.clear_moves()
             board.calc_moves(piece, square.row, square.col)
             for move in piece.moves:

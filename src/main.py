@@ -35,9 +35,8 @@ class Main:
                 if dragger.dragging:
                     dragger.update_blit(screen)
 
-
                 if self.game.next_player == "white":
-                    value, new_board = minimax(deepcopy(board), 3, True, self.game)
+                    value, new_board = minimax(deepcopy(board), 3, True, self.game, float("-inf"), float("inf"))
                     if new_board:
                         self.game.ai_move(new_board)
                         board = deepcopy(new_board)
@@ -45,6 +44,9 @@ class Main:
                         # self.game.next_player = "black"
                     board.reset_board()
                     self.game.board.reset_board()
+                    if board.has_second_eating_move_for_bot:
+                        self.game.next_player = "white"
+                    board.has_second_eating_move_for_bot = False
 
                 for event in pygame.event.get():
                     # click
@@ -187,3 +189,8 @@ class Main:
 
 main = Main()
 main.mainloop()
+
+
+
+
+

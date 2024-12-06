@@ -13,8 +13,17 @@ class Board:
         self._add_pieces("black")
         self.pieces_that_can_eat = []
         self.squares_that_can_eat = []
+        # self.last_moved_square = None
+        self.has_second_eating_move_for_bot = False
+        self.next_player_board = "white"
 
     def move(self, piece, move):
+        if piece.color == "white":
+            self.next_player_board = "black"
+        else:
+            self.next_player_board = "white"
+
+            
         initial = move.initial
         final = move.final
         piece.has_second_eating_move = False
@@ -38,7 +47,9 @@ class Board:
                     (final.row - 1, final.col + 1)
                 ]
                 piece.has_second_eating_move = self.pawns_eating_moves(piece, final.row, final.col, possible_moves)
-
+                self.has_second_eating_move_for_bot = piece.has_second_eating_move
+                if self.has_second_eating_move_for_bot:
+                    self.next_player_board = piece.color
             self.squares[initial.row][initial.col].piece = None
             self.squares[final.row][final.col].piece = piece
             
@@ -47,6 +58,7 @@ class Board:
                 color = piece.color
                 self.squares[final.row][final.col] = None
                 self.squares[final.row][final.col] = Square(final.row, final.col, King(color))
+
 
             
         else: # for kings
@@ -77,6 +89,8 @@ class Board:
                                 for d in dirs:
                                     if self.king_has_second_eating_move(piece, temp_r, temp_c, d):
                                         piece.has_second_eating_move = True
+                                        self.has_second_eating_move_for_bot = True
+                                        self.next_player_board = piece.color
                             else:
                                 break
                             if abs(temp_r) == abs(final.row) and abs(temp_c) == abs(final.col):
@@ -341,14 +355,14 @@ class Board:
                     # score += piece.value
                     if piece.color == "white":
                         if piece.name == "pawn":
-                            white_pieces_left += 1
+                            white_pieces_left += 3
                         else:
-                            white_kings_left += 3
+                            white_kings_left += 5
                     else:
                         if piece.name == "pawn":
-                            black_pieces_left -= 1
+                            black_pieces_left -= 3
                         else:
-                            black_kings_left -= 3
+                            black_kings_left -= 5
         score = white_pieces_left + black_pieces_left + white_kings_left + black_kings_left
         return score
 
